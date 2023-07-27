@@ -117,16 +117,16 @@ class BaxterHead:
         img = np.fromstring(msg.data, np.uint8)
         img = img.reshape(msg.height, msg.width, 4)
 
-        #rospy.loginfo("Image shape: " + str(img.shape))
+        rospy.loginfo("Image shape: " + str(img.shape))
 
-        # cv2.imshow('head_camera', img)
-        # cv2.waitKey(1)
+        cv2.imshow('head_camera', img)
+        cv2.waitKey(0)
         # return
 
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-        # cv2.imshow('head_camera', gray)
-        # cv2.waitKey(1)
+        cv2.imshow('head_camera', gray)
+        cv2.waitKey(0)
         # return
 
         faces = self.cv_face_cascade.detectMultiScale(
@@ -158,7 +158,7 @@ class BaxterHead:
                 dif_x = temp_dif_x
 
         cv2.imshow('head_camera', gray)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
 
         # TODO change to happy animation
         if is_face:
