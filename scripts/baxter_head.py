@@ -23,6 +23,7 @@ import cv2
 
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
+from baxter_core_msgs.msg import NavigatorState
 import baxter_interface
 from baxter_interface import CHECK_VERSION
 from baxter_interface import Head
@@ -92,7 +93,7 @@ class BaxterHead:
 
         self.sub_nav_arm_right = rospy.Subscriber(
             'robot/navigators/right_navigator/state',
-            baxter_interface.NavigatorState,
+            NavigatorState,
             self.on_nav_arm_right,
             queue_size=1
         )
