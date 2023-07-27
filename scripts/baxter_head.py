@@ -34,10 +34,17 @@ class BaxterHead:
 
         self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
         if not self.bax_main.state().enabled:
+            rospy.loginfo("Enabling Baxter")
             self.bax_main.enable()
+        else:
+            rospy.loginfo("Baxter already enabled")
 
         self.bax_head = Head()
-        self.bax_head.set_pan(angle=0)
+        rospy.loginfo("pan: %f" % self.bax_head.pan())
+        rospy.loginfo("panning: %s" % self.bax_head.is_panning())
+        rospy.loginfo("nodding: %s" % self.bax_head.is_nodding())
+        self.bax_head.command_nod()
+        #self.bax_head.set_pan(angle=0)
 
         self.pub_display = rospy.Publisher(
             "/robot/xdisplay",
@@ -83,6 +90,7 @@ class BaxterHead:
             if self.state_eyes_delta_time > 0.1:
                 img = cv2.imread(self.state_eyes_images[self.state_eyes_idx])
                 img = cv2.resize(img, (1024, 600))
+                # cv_bridge - do not use on python3
 
                 msg = Image()
                 msg.header.stamp = rospy.Time.now()
