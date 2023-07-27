@@ -64,7 +64,7 @@ class BaxterHead:
 
     def set_eyes_animation(self, eyes_anim):
         rospy.loginfo("Setting eyes animation to: " + eyes_anim)
-        path_images = package_directory + "images/eyes/" + eyes_anim + "/"
+        path_images = package_directory + "resources/eyes/" + eyes_anim + "/"
         self.state_eyes_images = sorted(os.listdir(path_images))
         self.state_eyes_images = [path_images + x for x in self.state_eyes_images]
         self.state_eyes_idx = 0
