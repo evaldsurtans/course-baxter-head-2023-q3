@@ -126,7 +126,6 @@ class BaxterHead:
         #self.bax_main.disable()
 
     def on_nav_arm_right(self, msg):
-        rospy.loginfo("on_nav_arm_right")
         if any(msg.buttons):
             rospy.loginfo("on_nav_arm_right button pressed")
             self.bax_head.command_nod()
