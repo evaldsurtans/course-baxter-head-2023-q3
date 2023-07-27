@@ -2,6 +2,7 @@ import math
 import os
 import time
 
+import numpy as np
 import rospy # pip3 install --extra-index-url https://rospypi.github.io/simple/ rospy
 import argparse
 
@@ -46,6 +47,19 @@ class BaxterHead:
         #self.bax_head.command_nod()
         self.bax_head.set_pan(angle=0.0)
 
+        try:
+            CameraController('head_camera')
+        except AttributeError:
+            left_cam = CameraController('left_hand_camera')
+            left_cam.close()
+
+        self.head_cam = CameraController('head_camera')
+        self.head_cam.resolution = (1280, 800)
+        self.head_cam.open()
+
+        self.sub_head_cam = rospy.Subscriber(
+            '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
+
         self.pub_display = rospy.Publisher(
             "/robot/xdisplay",
             Image,
@@ -69,9 +83,64 @@ class BaxterHead:
         self.state_eyes_delta_time = 0
         self.set_eyes_animation(eyes_anim)
 
+        # Field of view
+        self.CENTER_X = int(1280 / 2)
+        self.FOV = math.pi / 3
+        self.FACE_RANGE = 50
+
     def close(self):
         rospy.loginfo("Closing Baxter Head")
-        self.bax_main.disable()
+        self.head_cam.close()
+        #self.bax_main.disable()
+
+    def on_head_cam(self, msg):
+
+        img = np.fromstring(msg.data, np.uint8)
+        img = img.reshape(msg.height, msg.width, 3)
+
+        cv2.imshow('head_camera', img)
+        cv2.waitKey(1)
+        return
+
+        # find face in img
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = self.cv_face_cascade.detectMultiScale(
+            gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
+            flags=cv2.cv.CV_HAAR_SCALE_IMAGE)
+
+        # closest face
+        dif_x = float('inf')
+        is_face = False
+
+        # Iterating through all faces
+        for (x, y, w, h) in faces:
+            # cut face
+            face = img[y:y + h, x:x + w]
+            # cv2.imshow('face', face)
+            # cv2.waitKey(1)
+
+            cur_pan = self.head.pan()
+
+            temp_dif_x = (x + (w / 2)) - self.CENTER_X
+            # If the face is closer than the last one found, then set it
+            # as the face to go to
+            if temp_dif_x < dif_x:
+                is_face = True
+                dif_x = temp_dif_x
+
+        # TODO change to happy animation
+        if is_face:
+            if self.head.panning() and abs(
+                    (-1 * (dif_x * (self.FOV / 2) / self.CENTER_X) + cur_pan)) < (math.pi / 2):
+
+                if dif_x > self.FACE_RANGE:
+                    self.head.set_pan(
+                        angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
+                              self.CENTER_X)
+                elif dif_x < (-1 * self.FACE_RANGE):
+                    self.head.set_pan(
+                        angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
+                              self.CENTER_X)
 
     def set_eyes_animation(self, eyes_anim):
         rospy.loginfo("Setting eyes animation to: " + eyes_anim)
@@ -102,6 +171,7 @@ class BaxterHead:
                 msg.is_bigendian = False
                 msg.step = 3 * msg.width
                 msg.data = img.tostring()
+
 
                 self.pub_display.publish(msg)
 
