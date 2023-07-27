@@ -211,6 +211,7 @@ class BaxterHead:
             rospy.logdebug("First image: " + self.state_eyes_images[0])
 
     def update_eyes_animation(self, delta_time):
+        return 
         if len(self.state_eyes_images) > 0:
             self.state_eyes_delta_time += delta_time
 
