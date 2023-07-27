@@ -41,8 +41,8 @@ class BaxterHead:
 
         self.bax_head = Head()
         rospy.loginfo("pan: %f" % self.bax_head.pan())
-        rospy.loginfo("panning: %s" % self.bax_head.is_panning())
-        rospy.loginfo("nodding: %s" % self.bax_head.is_nodding())
+        rospy.loginfo("panning: %s" % self.bax_head.panning())
+        rospy.loginfo("nodding: %s" % self.bax_head.nodding())
         self.bax_head.command_nod()
         #self.bax_head.set_pan(angle=0)
 
