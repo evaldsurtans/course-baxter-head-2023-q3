@@ -129,10 +129,8 @@ class BaxterHead:
         # cv2.waitKey(1)
         # return
 
-        pdb.set_trace()
         faces = self.cv_face_cascade.detectMultiScale(
-            gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
-            flags=cv2.CV_HAAR_SCALE_IMAGE)
+            gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10), flags=2)
 
         # closest face
         dif_x = float('inf')
