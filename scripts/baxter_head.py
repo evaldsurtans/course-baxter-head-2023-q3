@@ -130,9 +130,9 @@ class BaxterHead:
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
 
-        plt.close()
-        plt.imshow(gray, cmap='gray')
-        plt.show()
+        # plt.close()
+        # plt.imshow(gray, cmap='gray')
+        # plt.show()
         #cv2.imshow('gray', gray)
         # return
 
@@ -165,9 +165,9 @@ class BaxterHead:
                 dif_x = temp_dif_x
 
         #cv2.imshow('faces', img)
-        plt.close()
-        plt.imshow(img)
-        plt.show()
+        # plt.close()
+        # plt.imshow(img)
+        # plt.show()
 
 
         # TODO change to happy animation
@@ -181,6 +181,8 @@ class BaxterHead:
                 self.bax_head.set_pan(
                     angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
                           self.CENTER_X)
+        else:
+            self.set_eyes_animation('processing')
 
         self.sub_head_cam = rospy.Subscriber(
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
