@@ -3,6 +3,7 @@
 import os
 import time
 from baxter_head import BaxterHead
+import rospy
 
 package_directory = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
