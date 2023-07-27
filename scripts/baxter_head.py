@@ -75,8 +75,11 @@ class BaxterHead:
     def update_eyes_animation(self, delta_time):
         if len(self.state_eyes_images) > 0:
             self.state_eyes_delta_time += delta_time
+
             if self.state_eyes_delta_time > 0.1:
                 img = cv2.imread(self.state_eyes_images[self.state_eyes_idx])
+                img = cv2.resize(img, (1024, 600))
+
                 msg = Image()
                 msg.header.stamp = rospy.Time.now()
                 msg.header.frame_id = "camera_frame"
