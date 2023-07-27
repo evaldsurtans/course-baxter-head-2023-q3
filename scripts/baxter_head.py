@@ -105,19 +105,25 @@ class BaxterHead:
 
     def on_head_cam(self, msg):
 
-        rospy.loginfo("Received head camera image")
+        self.sub_head_cam.unregister()
+
+        #rospy.loginfo("Received head camera image")
 
         img = np.fromstring(msg.data, np.uint8)
         img = img.reshape(msg.height, msg.width, 4)
 
-        rospy.loginfo("Image shape: " + str(img.shape))
+        #rospy.loginfo("Image shape: " + str(img.shape))
 
-        cv2.imshow('head_camera', img)
-        cv2.waitKey(1)
-        return
+        # cv2.imshow('head_camera', img)
+        # cv2.waitKey(1)
+        # return
 
         # find face in img
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        cv2.imshow('head_camera', gray)
+        cv2.waitKey(1)
+        return
+
         faces = self.cv_face_cascade.detectMultiScale(
             gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
             flags=cv2.cv.CV_HAAR_SCALE_IMAGE)
@@ -155,6 +161,9 @@ class BaxterHead:
                     self.head.set_pan(
                         angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
                               self.CENTER_X)
+
+        self.sub_head_cam = rospy.Subscriber(
+            '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
 
     def set_eyes_animation(self, eyes_anim):
         rospy.loginfo("Setting eyes animation to: " + eyes_anim)
