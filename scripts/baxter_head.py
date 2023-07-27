@@ -50,12 +50,15 @@ class BaxterHead:
         try:
             CameraController('head_camera')
         except AttributeError:
+            rospy.loginfo("Camera already initialized, closing left hand camera")
             left_cam = CameraController('left_hand_camera')
             left_cam.close()
 
+        rospy.loginfo("Initializing head camera")
         self.head_cam = CameraController('head_camera')
         self.head_cam.resolution = (1280, 800)
         self.head_cam.open()
+        rospy.loginfo("Head camera initialized")
 
         self.sub_head_cam = rospy.Subscriber(
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
@@ -95,8 +98,12 @@ class BaxterHead:
 
     def on_head_cam(self, msg):
 
+        rospy.loginfo("Received head camera image")
+
         img = np.fromstring(msg.data, np.uint8)
         img = img.reshape(msg.height, msg.width, 3)
+
+        rospy.loginfo("Image shape: " + str(img.shape))
 
         cv2.imshow('head_camera', img)
         cv2.waitKey(1)
