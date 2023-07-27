@@ -34,9 +34,9 @@ class BaxterHead:
         # self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
         # if not self.bax_main.state().enabled:
         #     self.bax_main.enable()
-        
+
         self.bax_head = Head()
-        self.bax_head.set_pan(angle=0.)
+        self.bax_head.set_pan(angle=math.pi/2)
 
         self.pub_display = rospy.Publisher(
             "/robot/xdisplay",
