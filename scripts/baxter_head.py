@@ -8,6 +8,7 @@ import argparse
 
 import pyrosenv.cv_bridge # pip3 install pyrosenv
 from pyrosenv.sensor_msgs.msg import Image
+from pyrosenv.std_msgs.msg import UInt16
 
 from baxter_interface import CHECK_VERSION
 from baxter_interface import Head
@@ -32,6 +33,17 @@ class BaxterHead:
             latch=True,
             queue_size=1
         )
+
+        self.pub_head_sonar = rospy.Publisher(
+            "/robot/sonar/head_sonar/set_sonars_enabled",
+            UInt16,
+            latch=True,
+            queue_size=1
+        )
+
+        # disable sonar
+        rospy.loginfo("Disabling sonar")
+        self.pub_head_sonar.publish(0)
 
         self.state_eyes_images = []
         self.state_eyes_idx = 0
