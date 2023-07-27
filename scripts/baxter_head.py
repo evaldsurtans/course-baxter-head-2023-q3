@@ -126,7 +126,6 @@ class BaxterHead:
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
         cv2.imshow('gray', gray)
-        cv2.waitKey(0)
         # return
 
         faces = self.cv_face_cascade.detectMultiScale(
@@ -158,7 +157,6 @@ class BaxterHead:
                 dif_x = temp_dif_x
 
         cv2.imshow('faces', img)
-        cv2.waitKey(0)
 
         # TODO change to happy animation
         if is_face:
