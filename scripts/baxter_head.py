@@ -100,7 +100,7 @@ class BaxterHead:
         self.set_eyes_animation(eyes_anim)
 
         # Field of view
-        self.CENTER_X = int(1280 / 2)
+        self.CENTER_X = int(640 / 2)
         self.FOV = math.pi / 3
         self.FACE_RANGE = 0
 
@@ -170,17 +170,6 @@ class BaxterHead:
         # plt.imshow(img)
         # plt.show()
 
-        msg = Image()
-        msg.header.stamp = rospy.Time.now()
-        msg.header.frame_id = "camera_frame"
-        msg.height = img.shape[0]
-        msg.width = img.shape[1]
-        msg.encoding = "bgr8"
-        msg.is_bigendian = False
-        msg.step = 3 * msg.width
-        msg.data = img.tostring()
-        self.pub_display.publish(msg)
-
 
         if is_face:
             self.set_eyes_animation('happy')
@@ -211,7 +200,7 @@ class BaxterHead:
             rospy.logdebug("First image: " + self.state_eyes_images[0])
 
     def update_eyes_animation(self, delta_time):
-        return 
+
         if len(self.state_eyes_images) > 0:
             self.state_eyes_delta_time += delta_time
 
