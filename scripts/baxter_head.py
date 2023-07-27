@@ -19,7 +19,7 @@ import cv2
 sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 
 # from baxter_interface import CHECK_VERSION
-# from baxter_interface import Head
+from baxter_interface import Head
 # from baxter_inteace import CameraController
 
 package_directory = os.path.dirname(os.path.realpath(__file__)) + "/../"
@@ -34,6 +34,9 @@ class BaxterHead:
         # self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
         # if not self.bax_main.state().enabled:
         #     self.bax_main.enable()
+        
+        self.bax_head = Head()
+        self.bax_head.set_pan(angle=0.)
 
         self.pub_display = rospy.Publisher(
             "/robot/xdisplay",
