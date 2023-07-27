@@ -145,7 +145,7 @@ class BaxterHead:
             # cv2.imshow('face', face)
             # cv2.waitKey(1)
 
-            cur_pan = self.head.pan()
+            cur_pan = self.bax_head.pan()
 
             temp_dif_x = (x + (w / 2)) - self.CENTER_X
             # If the face is closer than the last one found, then set it
@@ -156,17 +156,14 @@ class BaxterHead:
 
         # TODO change to happy animation
         if is_face:
-            if self.head.panning() and abs(
-                    (-1 * (dif_x * (self.FOV / 2) / self.CENTER_X) + cur_pan)) < (math.pi / 2):
-
-                if dif_x > self.FACE_RANGE:
-                    self.head.set_pan(
-                        angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
-                              self.CENTER_X)
-                elif dif_x < (-1 * self.FACE_RANGE):
-                    self.head.set_pan(
-                        angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
-                              self.CENTER_X)
+            if dif_x > self.FACE_RANGE:
+                self.bax_head.set_pan(
+                    angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
+                          self.CENTER_X)
+            elif dif_x < (-1 * self.FACE_RANGE):
+                self.bax_head.set_pan(
+                    angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
+                          self.CENTER_X)
 
         self.sub_head_cam = rospy.Subscriber(
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
