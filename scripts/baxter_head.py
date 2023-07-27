@@ -37,6 +37,8 @@ class BaxterHead:
         rospy.init_node("baxter_head")
         rospy.loginfo("Initializing Baxter Head")
 
+        self.eyes_anim = eyes_anim
+
         self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
         if not self.bax_main.state().enabled:
             rospy.loginfo("Enabling Baxter")
@@ -102,7 +104,6 @@ class BaxterHead:
         self.FOV = math.pi / 3
         self.FACE_RANGE = 50
 
-        self.eyes_anim = eyes_anim
         self.cv_face_cascade = cv2.CascadeClassifier(
             package_directory + 'resources/opencv/haarcascade_frontalface_default.xml')
 
