@@ -9,6 +9,8 @@ import argparse
 from sensor_msgs.msg import Image
 from std_msgs.msg import UInt16
 
+import matplotlib.pyplot as plt
+
 import pdb
 
 import sys
@@ -125,7 +127,9 @@ class BaxterHead:
 
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-        cv2.imshow('gray', gray)
+        plt.imshow(gray, cmap='gray')
+        plt.show()
+        #cv2.imshow('gray', gray)
         # return
 
         faces = self.cv_face_cascade.detectMultiScale(
@@ -156,7 +160,9 @@ class BaxterHead:
                 is_face = True
                 dif_x = temp_dif_x
 
-        cv2.imshow('faces', img)
+        #cv2.imshow('faces', img)
+        plt.imshow(img)
+        plt.show()
 
         # TODO change to happy animation
         if is_face:
