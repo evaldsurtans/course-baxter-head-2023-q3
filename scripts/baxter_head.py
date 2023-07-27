@@ -21,7 +21,7 @@ sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
 import baxter_interface
 from baxter_interface import CHECK_VERSION
 from baxter_interface import Head
-from baxter_inteace import CameraController
+from baxter_interface import CameraController
 
 package_directory = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
