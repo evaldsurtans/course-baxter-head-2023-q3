@@ -102,6 +102,7 @@ class BaxterHead:
         self.FOV = math.pi / 3
         self.FACE_RANGE = 50
 
+        self.eyes_anim = eyes_anim
         self.cv_face_cascade = cv2.CascadeClassifier(
             package_directory + 'resources/opencv/haarcascade_frontalface_default.xml')
 
@@ -127,13 +128,15 @@ class BaxterHead:
 
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
+
+        plt.close()
         plt.imshow(gray, cmap='gray')
         plt.show()
         #cv2.imshow('gray', gray)
         # return
 
         faces = self.cv_face_cascade.detectMultiScale(
-            gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10), flags=2)
+            gray, scaleFactor=0.5, minNeighbors=2, minSize=(10, 10), flags=2)
 
         # closest face
         dif_x = float('inf')
@@ -161,11 +164,14 @@ class BaxterHead:
                 dif_x = temp_dif_x
 
         #cv2.imshow('faces', img)
+        plt.close()
         plt.imshow(img)
         plt.show()
 
+
         # TODO change to happy animation
         if is_face:
+            self.set_eyes_animation('happy')
             if dif_x > self.FACE_RANGE:
                 self.bax_head.set_pan(
                     angle=cur_pan + -1 * (dif_x * (self.FOV / 2)) /
@@ -179,14 +185,16 @@ class BaxterHead:
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
 
     def set_eyes_animation(self, eyes_anim):
-        rospy.loginfo("Setting eyes animation to: " + eyes_anim)
-        path_images = package_directory + "resources/eyes/" + eyes_anim + "/"
-        self.state_eyes_images = sorted(os.listdir(path_images))
-        self.state_eyes_images = [path_images + x for x in self.state_eyes_images]
-        self.state_eyes_idx = 0
+        if self.eyes_anim != eyes_anim:
+            self.eyes_anim = eyes_anim
+            rospy.loginfo("Setting eyes animation to: " + eyes_anim)
+            path_images = package_directory + "resources/eyes/" + eyes_anim + "/"
+            self.state_eyes_images = sorted(os.listdir(path_images))
+            self.state_eyes_images = [path_images + x for x in self.state_eyes_images]
+            self.state_eyes_idx = 0
 
-        rospy.logdebug("Loaded " + str(len(self.state_eyes_images)) + " images")
-        rospy.logdebug("First image: " + self.state_eyes_images[0])
+            rospy.logdebug("Loaded " + str(len(self.state_eyes_images)) + " images")
+            rospy.logdebug("First image: " + self.state_eyes_images[0])
 
     def update_eyes_animation(self, delta_time):
         if len(self.state_eyes_images) > 0:
