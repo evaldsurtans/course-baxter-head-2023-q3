@@ -90,6 +90,14 @@ class BaxterHead:
             queue_size=1
         )
 
+        self.sub_nav_arm_right = rospy.Subscriber(
+            'robot/navigators/right_navigator/state',
+            baxter_interface.NavigatorState,
+            self.on_nav_arm_right,
+            queue_size=1
+        )
+
+
         # disable sonar
         rospy.loginfo("Disabling sonar")
         self.pub_head_sonar.publish(0)
@@ -107,10 +115,24 @@ class BaxterHead:
         self.cv_face_cascade = cv2.CascadeClassifier(
             package_directory + 'resources/opencv/haarcascade_frontalface_default.xml')
 
+        self.limb_left = baxter_interface.Limb('left')
+        self.gripper_left = baxter_interface.Gripper('left',  CHECK_VERSION)
+        self.stored_joint_angles_left = None
+
     def close(self):
         rospy.loginfo("Closing Baxter Head")
         #self.head_cam.close()
         #self.bax_main.disable()
+
+    def on_nav_arm_right(self, msg):
+        if any(msg.buttons):
+            self.bax_head.command_nod()
+            if self.stored_joint_angles_left is None:
+                self.stored_joint_angles_left = self.limb_left.joint_angles()
+            else:
+                self.limb_left.move_to_joint_positions(self.stored_joint_angles_left)
+                self.stored_joint_angles_left = None
+
 
     def on_head_cam(self, msg):
 
@@ -183,6 +205,7 @@ class BaxterHead:
                           self.CENTER_X)
         else:
             self.set_eyes_animation('processing')
+            self.bax_head.set_pan(angle=0.0)
 
         self.sub_head_cam = rospy.Subscriber(
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
