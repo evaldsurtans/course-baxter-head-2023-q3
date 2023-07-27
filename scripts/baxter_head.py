@@ -45,20 +45,27 @@ class BaxterHead:
         rospy.loginfo("panning: %s" % self.bax_head.panning())
         rospy.loginfo("nodding: %s" % self.bax_head.nodding())
         #self.bax_head.command_nod()
+        rospy.loginfo("Panning head to 0")
         self.bax_head.set_pan(angle=0.0)
 
+        rospy.loginfo("Initializing head camera")
+        self.head_cam = None
         try:
-            CameraController('head_camera')
+            self.head_cam = CameraController('head_camera')
+            self.head_cam.resolution = (960, 600)
+            self.head_cam.open()
         except AttributeError:
+            self.head_cam = None
             rospy.loginfo("Camera already initialized, closing left hand camera")
             left_cam = CameraController('left_hand_camera')
             left_cam.close()
 
-        rospy.loginfo("Initializing head camera")
-        self.head_cam = CameraController('head_camera')
-        self.head_cam.resolution = (1280, 800)
-        self.head_cam.open()
-        rospy.loginfo("Head camera initialized")
+        if not self.head_cam:
+            rospy.loginfo("Initializing head camera")
+            self.head_cam = CameraController('head_camera')
+            self.head_cam.resolution = (1280, 800)
+            self.head_cam.open()
+            rospy.loginfo("Head camera initialized")
 
         self.sub_head_cam = rospy.Subscriber(
             '/cameras/head_camera/image', Image, self.on_head_cam, queue_size=1)
