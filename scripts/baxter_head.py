@@ -119,7 +119,10 @@ class BaxterHead:
         # return
 
         # find face in img
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # cv2 RGBA to GRAY
+
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
         cv2.imshow('head_camera', gray)
         cv2.waitKey(1)
         return
