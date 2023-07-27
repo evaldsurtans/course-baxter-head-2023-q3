@@ -14,5 +14,18 @@ from baxter_interface import CHECK_VERSION
 from baxter_interface import Head
 from baxter_interface import CameraController
 
+from baxter_head import BaxterHead
+
 package_directory = os.path.dirname(os.path.realpath(__file__)) + "/../"
-# TODO
+
+if __name__ == "__main__":
+    baxter_head = BaxterHead()
+
+    time_last = time.time()
+    while not rospy.is_shutdown():
+        delta_time = time.time() - time_last
+        baxter_head.update(delta_time)
+        rospy.sleep(0.01)
+        time_last = time.time()
+
+    baxter_head.close()
