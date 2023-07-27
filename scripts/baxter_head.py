@@ -126,11 +126,15 @@ class BaxterHead:
         #self.bax_main.disable()
 
     def on_nav_arm_right(self, msg):
+        rospy.loginfo("on_nav_arm_right")
         if any(msg.buttons):
+            rospy.loginfo("on_nav_arm_right button pressed")
             self.bax_head.command_nod()
             if self.stored_joint_angles_left is None:
+                rospy.loginfo("on_nav_arm_right storing joint angles")
                 self.stored_joint_angles_left = self.limb_left.joint_angles()
             else:
+                rospy.loginfo("on_nav_arm_right moving to stored joint angles")
                 self.limb_left.move_to_joint_positions(self.stored_joint_angles_left)
                 self.stored_joint_angles_left = None
 
