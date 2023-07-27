@@ -98,6 +98,9 @@ class BaxterHead:
         self.FOV = math.pi / 3
         self.FACE_RANGE = 50
 
+        self.cv_face_cascade = cv2.CascadeClassifier(
+            package_directory + 'resources/haarcascade_frontalface_default.xml')
+
     def close(self):
         rospy.loginfo("Closing Baxter Head")
         #self.head_cam.close()
@@ -118,14 +121,11 @@ class BaxterHead:
         # cv2.waitKey(1)
         # return
 
-        # find face in img
-        # cv2 RGBA to GRAY
-
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-        cv2.imshow('head_camera', gray)
-        cv2.waitKey(1)
-        return
+        # cv2.imshow('head_camera', gray)
+        # cv2.waitKey(1)
+        # return
 
         faces = self.cv_face_cascade.detectMultiScale(
             gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
