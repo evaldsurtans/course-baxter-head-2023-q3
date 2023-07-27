@@ -6,13 +6,22 @@ import rospy # pip3 install --extra-index-url https://rospypi.github.io/simple/ 
 import cv2
 import argparse
 
-import pyrosenv.cv_bridge # pip3 install pyrosenv
-from pyrosenv.sensor_msgs.msg import Image
-from pyrosenv.std_msgs.msg import UInt16
+from sensor_msgs.msg import Image
+from std_msgs.msg import UInt16
 
-from baxter_interface import CHECK_VERSION
-from baxter_interface import Head
-from baxter_interface import CameraController
+import sys
+ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
+
+if ros_path in sys.path:
+    sys.path.remove(ros_path)
+
+import cv2
+
+sys.path.append('/opt/ros/kinetic/lib/python2.7/dist-packages')
+
+# from baxter_interface import CHECK_VERSION
+# from baxter_interface import Head
+# from baxter_inteace import CameraController
 
 package_directory = os.path.dirname(os.path.realpath(__file__)) + "/../"
 
@@ -23,9 +32,9 @@ class BaxterHead:
         rospy.init_node("baxter_head")
         rospy.loginfo("Initializing Baxter Head")
 
-        self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
-        if not self.bax_main.state().enabled:
-            self.bax_main.enable()
+        # self.bax_main = baxter_interface.RobotEnable(CHECK_VERSION)
+        # if not self.bax_main.state().enabled:
+        #     self.bax_main.enable()
 
         self.pub_display = rospy.Publisher(
             "/robot/xdisplay",
@@ -69,7 +78,17 @@ class BaxterHead:
             self.state_eyes_delta_time += delta_time
             if self.state_eyes_delta_time > 0.1:
                 img = cv2.imread(self.state_eyes_images[self.state_eyes_idx])
-                msg = pyrosenv.cv_bridge.cv2_to_imgmsg(img, encoding="bgr8")
+                msg = Image()
+                msg.header.stamp = rospy.Time.now()
+                msg.header.frame_id = "camera_frame"
+
+                msg.height = img.shape[0]
+                msg.width = img.shape[1]
+                msg.encoding = "bgr8"
+                msg.is_bigendian = False
+                msg.step = 3 * msg.width
+                msg.data = img.tostring()
+
                 self.pub_display.publish(msg)
 
                 self.state_eyes_idx = (self.state_eyes_idx + 1) % len(self.state_eyes_images)
