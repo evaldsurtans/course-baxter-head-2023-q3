@@ -91,10 +91,10 @@ class BaxterHead:
             queue_size=1
         )
 
-        self.sub_nav_arm_right = rospy.Subscriber(
+        self.sub_nav_arm_left = rospy.Subscriber(
             'robot/navigators/left_navigator/state',
             NavigatorState,
-            self.on_nav_arm_right,
+            self.on_nav_arm_left,
             queue_size=1
         )
 
@@ -125,7 +125,7 @@ class BaxterHead:
         #self.head_cam.close()
         #self.bax_main.disable()
 
-    def on_nav_arm_right(self, msg):
+    def on_nav_arm_left(self, msg):
         if any(msg.buttons):
             rospy.loginfo("on_nav_arm_right button pressed")
             self.bax_head.command_nod()
