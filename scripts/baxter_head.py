@@ -119,13 +119,13 @@ class BaxterHead:
 
         rospy.loginfo("Image shape: " + str(img.shape))
 
-        cv2.imshow('head_camera', img)
-        cv2.waitKey(0)
+        # cv2.imshow('head_camera', img)
+        # cv2.waitKey(0)
         # return
 
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-        cv2.imshow('head_camera', gray)
+        cv2.imshow('gray', gray)
         cv2.waitKey(0)
         # return
 
@@ -146,7 +146,7 @@ class BaxterHead:
             # cv2.waitKey(1)
 
             # draw box on gray image
-            cv2.rectangle(gray, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0, 0), 2)
 
             cur_pan = self.bax_head.pan()
 
@@ -157,7 +157,7 @@ class BaxterHead:
                 is_face = True
                 dif_x = temp_dif_x
 
-        cv2.imshow('head_camera', gray)
+        cv2.imshow('faces', img)
         cv2.waitKey(0)
 
         # TODO change to happy animation
