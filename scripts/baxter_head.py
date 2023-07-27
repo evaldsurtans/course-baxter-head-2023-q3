@@ -92,7 +92,7 @@ class BaxterHead:
         )
 
         self.sub_nav_arm_right = rospy.Subscriber(
-            'robot/navigators/right_navigator/state',
+            'robot/navigators/left_navigator/state',
             NavigatorState,
             self.on_nav_arm_right,
             queue_size=1
