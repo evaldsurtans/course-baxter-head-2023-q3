@@ -108,7 +108,7 @@ class BaxterHead:
         rospy.loginfo("Received head camera image")
 
         img = np.fromstring(msg.data, np.uint8)
-        img = img.reshape(msg.height, msg.width, 3)
+        img = img.reshape(msg.height, msg.width, 4)
 
         rospy.loginfo("Image shape: " + str(img.shape))
 
