@@ -9,6 +9,8 @@ import argparse
 from sensor_msgs.msg import Image
 from std_msgs.msg import UInt16
 
+import pdb
+
 import sys
 ros_path = '/opt/ros/kinetic/lib/python2.7/dist-packages'
 
@@ -127,6 +129,7 @@ class BaxterHead:
         # cv2.waitKey(1)
         # return
 
+        pdb.set_trace()
         faces = self.cv_face_cascade.detectMultiScale(
             gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
             flags=cv2.CV_HAAR_SCALE_IMAGE)
