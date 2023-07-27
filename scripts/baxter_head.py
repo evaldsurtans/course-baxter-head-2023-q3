@@ -129,7 +129,7 @@ class BaxterHead:
 
         faces = self.cv_face_cascade.detectMultiScale(
             gray, scaleFactor=1.25, minNeighbors=4, minSize=(10, 10),
-            flags=cv2.cv.CV_HAAR_SCALE_IMAGE)
+            flags=cv2.CV_HAAR_SCALE_IMAGE)
 
         # closest face
         dif_x = float('inf')
