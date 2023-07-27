@@ -136,6 +136,8 @@ class BaxterHead:
         dif_x = float('inf')
         is_face = False
 
+        rospy.loginfo("Found %d faces" % len(faces))
+
         # Iterating through all faces
         for (x, y, w, h) in faces:
             # cut face
