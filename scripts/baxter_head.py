@@ -3,7 +3,6 @@ import os
 import time
 
 import rospy # pip3 install --extra-index-url https://rospypi.github.io/simple/ rospy
-import cv2
 import argparse
 
 from sensor_msgs.msg import Image
