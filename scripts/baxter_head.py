@@ -101,7 +101,7 @@ class BaxterHead:
         self.FACE_RANGE = 50
 
         self.cv_face_cascade = cv2.CascadeClassifier(
-            package_directory + 'resources/haarcascade_frontalface_default.xml')
+            package_directory + 'resources/opencv/haarcascade_frontalface_default.xml')
 
     def close(self):
         rospy.loginfo("Closing Baxter Head")
