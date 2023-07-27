@@ -102,7 +102,7 @@ class BaxterHead:
         # Field of view
         self.CENTER_X = int(1280 / 2)
         self.FOV = math.pi / 3
-        self.FACE_RANGE = 50
+        self.FACE_RANGE = 0
 
         self.cv_face_cascade = cv2.CascadeClassifier(
             package_directory + 'resources/opencv/haarcascade_frontalface_default.xml')
@@ -137,7 +137,7 @@ class BaxterHead:
         # return
 
         faces = self.cv_face_cascade.detectMultiScale(
-            gray, scaleFactor=1.1, minNeighbors=2, minSize=(10, 10), flags=2)
+            gray, scaleFactor=1.1, minNeighbors=3, minSize=(10, 10), flags=2)
 
         # closest face
         dif_x = float('inf')
@@ -157,6 +157,7 @@ class BaxterHead:
 
             cur_pan = self.bax_head.pan()
 
+
             temp_dif_x = (x + (w / 2)) - self.CENTER_X
             # If the face is closer than the last one found, then set it
             # as the face to go to
@@ -169,8 +170,18 @@ class BaxterHead:
         # plt.imshow(img)
         # plt.show()
 
+        msg = Image()
+        msg.header.stamp = rospy.Time.now()
+        msg.header.frame_id = "camera_frame"
+        msg.height = img.shape[0]
+        msg.width = img.shape[1]
+        msg.encoding = "bgr8"
+        msg.is_bigendian = False
+        msg.step = 3 * msg.width
+        msg.data = img.tostring()
+        self.pub_display.publish(msg)
 
-        # TODO change to happy animation
+
         if is_face:
             self.set_eyes_animation('happy')
             if dif_x > self.FACE_RANGE:
