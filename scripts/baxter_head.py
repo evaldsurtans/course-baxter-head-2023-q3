@@ -141,9 +141,12 @@ class BaxterHead:
         # Iterating through all faces
         for (x, y, w, h) in faces:
             # cut face
-            face = img[y:y + h, x:x + w]
+            #face = img[y:y + h, x:x + w]
             # cv2.imshow('face', face)
             # cv2.waitKey(1)
+
+            # draw box on gray image
+            cv2.rectangle(gray, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
             cur_pan = self.bax_head.pan()
 
@@ -153,6 +156,9 @@ class BaxterHead:
             if temp_dif_x < dif_x:
                 is_face = True
                 dif_x = temp_dif_x
+
+        cv2.imshow('head_camera', gray)
+        cv2.waitKey(1)
 
         # TODO change to happy animation
         if is_face:
